@@ -3,6 +3,10 @@ Attribute VB_Name = "NAV"
 Public LastDataFromWeb As Long
 Private DataFromWebSearchColumn As String
 Private DataFromWebFirstRow As String
+Private ColumnPriceNAV As Integer
+Private ColumnPriceBuy As Integer
+Private ColumnPriceSell As Integer
+Private DateFormat As String
 
 '---------------------------------------------------------------------------------------
 ' Procedure : Initialize
@@ -15,6 +19,10 @@ Public Sub Initialize()
     DataFromWebSearchColumn = GetNameRefersTo(Setting.Names("SEARCH_COLUMN"))
     DataFromWebFirstRow = GetNameRefersTo(Setting.Names("FIRST_ROW"))
     LastDataFromWeb = Utils.GetLastRow(DataFromWeb.Cells, DataFromWebSearchColumn)
+    ColumnPriceNAV = GetNameRefersTo(Setting.Names("COL_PNAV"))
+    ColumnPriceBuy = GetNameRefersTo(Setting.Names("COL_PBUY"))
+    ColumnPriceSell = GetNameRefersTo(Setting.Names("COL_PSELL"))
+    DateFormat = GetNameRefersTo(Setting.Names("DATE_FORMAT"))
 End Sub
 
 '---------------------------------------------------------------------------------------
@@ -22,14 +30,15 @@ End Sub
 ' Author    : guhungry
 ' Date      : 2012-03-28
 ' Purpose   : Return Range of matched Stock in DataFromWeb, used by GetStockValue and GetStockCell
+' Change Log:
+'   2013-07-25 - Use English Template Instead
 '---------------------------------------------------------------------------------------
 '
 Private Function FindNAV(TransactionDate As Date) As Range
     Dim Found As Range
     Dim y As Integer
     Dim sdate As String
-    y = Year(TransactionDate) + 543 - 2500
-    sdate = Format(TransactionDate, "dd/mm/") & y
+    sdate = Format(TransactionDate, DateFormat)
     
     Set Found = DataFromWeb.Range(DataFromWebSearchColumn & DataFromWebFirstRow, DataFromWebSearchColumn & LastDataFromWeb)
     Set Found = Found.Find(What:=sdate, After:=Found.Cells(1, 1), LookIn:=xlValues, LookAt _
@@ -55,11 +64,11 @@ Public Function GetValueNAV(TransactionDate As Date, PriceType As String) As Dou
         GetValueNAV = -1
     Else
         If (PriceType = "B") Then
-            GetValueNAV = Found.Cells(1, 4).Value
+            GetValueNAV = Found.Cells(1, ColumnPriceBuy).Value
         ElseIf (PriceType = "S") Then
-            GetValueNAV = Found.Cells(1, 6).Value
+            GetValueNAV = Found.Cells(1, ColumnPriceSell).Value
         Else
-            GetValueNAV = Found.Cells(1, 2).Value
+            GetValueNAV = Found.Cells(1, ColumnPriceNAV).Value
         End If
     End If
 End Function
@@ -83,11 +92,11 @@ Public Function GetCellNAV(TransactionDate As Date, TransactionType As String) A
         GetCellNAV = ""
     Else
         If (PriceType = "B") Then
-            GetCellNAV = "=" & Utils.RangeAddress(Found.Cells(1, 4))
+            GetCellNAV = "=" & Utils.RangeAddress(Found.Cells(1, ColumnPriceBuy))
         ElseIf (PriceType = "S") Then
-            GetCellNAV = "=" & Utils.RangeAddress(Found.Cells(1, 6))
+            GetCellNAV = "=" & Utils.RangeAddress(Found.Cells(1, ColumnPriceSell))
         Else
-            GetCellNAV = "=" & Utils.RangeAddress(Found.Cells(1, 2))
+            GetCellNAV = "=" & Utils.RangeAddress(Found.Cells(1, ColumnPriceNAV))
         End If
     End If
 End Function
