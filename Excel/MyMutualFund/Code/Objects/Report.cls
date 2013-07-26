@@ -64,7 +64,7 @@ Public Sub ReportMake()
         'Set Header in New Row
         If StartRow = LastRow Then
             NumStock = 0
-            myCell.Cells(1, 3).Value = DataFromWeb.Range(GetNameRefersTo(Setting.Names("FUND_NAME"))).Value
+            myCell.Cells(1, 3).Value = Trim(TextUtils.GetRegExp("^[^(]+", DataFromWeb.Range(GetNameRefersTo(Setting.Names("FUND_NAME"))).Value))
             Set myCell = myCell.Cells(2, 1)
         End If
         
