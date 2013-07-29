@@ -16,14 +16,14 @@ Private info As New SheetInfo
 ' Last Row property
 ''''''''''''''''''''''
 Public Property Get LastRow() As Long
-LastRow = info.LastRow
+    LastRow = info.LastRow
 End Property
 
 ''''''''''''''''''''''
 ' Active Cell property
 ''''''''''''''''''''''
 Public Property Get ActCell() As String
-ActCell = info.ActCell
+    ActCell = info.ActCell
 End Property
 
 '---------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ End Property
 '---------------------------------------------------------------------------------------
 '
 Public Sub Initialize()
-info.Init NAV.Cells, 2
+    info.Init NAV.Cells, 2
 End Sub
 
 '---------------------------------------------------------------------------------------

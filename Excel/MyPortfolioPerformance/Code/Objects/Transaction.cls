@@ -16,7 +16,7 @@ Private info As New SheetInfo
 ' Last Row property
 ''''''''''''''''''''''
 Public Property Get LastRow() As Long
-LastRow = info.LastRow
+    LastRow = info.LastRow
 End Property
 
 '---------------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ End Property
 '---------------------------------------------------------------------------------------
 '
 Public Sub Initialize()
-info.Init Transaction.Cells, 2, "A"
+    info.Init Transaction.Cells, 2, "A"
 End Sub
 
 '---------------------------------------------------------------------------------------
