@@ -84,7 +84,39 @@ Private Sub MergeStatement(Source As Range, LookupColumn As String)
     Dim col As String
     Dim sourceInfo As New SheetInfo
     Dim myActive As String
+    Dim myCell As Range
+    Dim LastColumn As Long
     
+    ' 1) Filter Header Column (Year) - Example: Yearly/2012
+    Set myCell = NewData.Cells(1, 2)
+    Do While myCell.Column <= myInfo.LastCol
+        myCell.Value = TextUtils.GetRegExp("[0-9]+$", myCell.Value)
+    
+        Set myCell = myCell.Cells(1, 2)
+    Loop
+    
+    ' Detect if Data from Set Smart
+    ' 1) Delete second row - Example: (31/12/2012)
+    ' 2) Copy not empty cell in column B to column A
+    ' 3) Delete column B
+    If IsEmpty(NewData.Cells(3, 1).Value) Then
+        ' 1) Delete second row - Example: (31/12/2012)
+        NewData.Range("2:2").Delete
+        
+        ' 2) Copy not empty cell in column B to column A
+        Set myCell = NewData.Cells(3, 2)
+        Do While myCell.Row <= myInfo.LastRow - 1
+            If Not IsEmpty(myCell.Value) Then
+                myCell(1, 0).Value = myCell.Value
+            End If
+            Set myCell = myCell.Cells(2, 1)
+        Loop
+        
+        ' 3) Delete column B
+        NewData.Range("B:B").Delete
+    End If
+
+
     'Clean up unneeded columns
     Application.ScreenUpdating = False
     Do
@@ -124,6 +156,6 @@ Private Function FindUnneededColumn() As Range
     Dim Found As Range
     Set Found = NewData.Range("B2:" & Utils.ColumnName(NewData.Cells(1, myInfo.LastCol)) & "2")
     Set Found = Found.Find(What:="%", After:=Found(1, 1), LookIn:=xlValues, LookAt _
-        :=xlWhole, SearchOrder:=xlByColumns, SearchDirection:=xlNext, MatchCase:=False, SearchFormat:=False)
+        :=xlPart, SearchOrder:=xlByColumns, SearchDirection:=xlNext, MatchCase:=False, SearchFormat:=False)
     Set FindUnneededColumn = Found
 End Function
