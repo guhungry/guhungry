@@ -26,6 +26,10 @@ Sub btnResetWebData()
     'Utils.DeleteNames DataFromWeb.Names
     Range("A1:L" & LastRow).Delete Shift:=xlUp
     LastRow = 1
+    'Delete all connections
+    For Each cn In ThisWorkbook.Connections
+        cn.Delete
+    Next cn
     'SET Main
     SetDataFromWeb "SetMain", GetNameRefersTo(Setting.Names("URL_SETMAIN")), GetNameRefersTo(Setting.Names("TAB_SETMAIN")), "A" & LastRow
     LastRow = Utils.GetLastRow(DataFromWeb.Cells) + 2
