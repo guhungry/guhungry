@@ -30,6 +30,10 @@ Sub btnResetWebData()
     For Each cn In ThisWorkbook.Connections
         cn.Delete
     Next cn
+    'Delete data from web query
+    While DataFromWeb.QueryTables.Count
+        DataFromWeb.QueryTables(1).Delete
+    Wend
     'SET Main
     SetDataFromWeb "SetMain", GetNameRefersTo(Setting.Names("URL_SETMAIN")), GetNameRefersTo(Setting.Names("TAB_SETMAIN")), "A" & LastRow
     LastRow = Utils.GetLastRow(DataFromWeb.Cells) + 2
