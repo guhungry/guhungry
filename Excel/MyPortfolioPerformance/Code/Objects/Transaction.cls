@@ -103,7 +103,7 @@ Private Sub GenerateNAVReport()
         
         'End Year Date
         If IsDate(tran.Cells(2, 1).Value) Then
-            lYear = Year(tran.Cells(2, 1).Value)
+            lYear = Year(Evaluate("=MIN(IF(Transaction!B:B>" & Int(CDbl(curDate)) & ",Transaction!B:B))"))
         Else
             lYear = Year(Date)
         End If
