@@ -53,6 +53,7 @@ End Sub
 '---------------------------------------------------------------------------------------
 '
 Private Sub GenerateNAVReport()
+    Dim myActive As String
     Dim curDate As Date, prevDate As Date, endYear As Date
     Dim curStock As String
     Dim myComment As String
@@ -88,16 +89,12 @@ Private Sub GenerateNAVReport()
         prevDate = Evaluate("=MAX(IF(Data!A:A<" & Int(CDbl(curDate)) & ",Data!A:A))")
         If LastRow <> 2 And myCell.Cells(0, 1).Value <> prevDate Then
             myCell.Cells(1, 1).Value = prevDate
-            myCell.Cells(1, 5).Value = 0
-            SetUpNAVRecord (myCell.Row)
             
             Set myCell = myCell.Cells(2, 1)
         End If
         
         'Transaction Date
         myCell.Cells(1, 1).Value = curDate
-        myCell.Cells(1, 5).Value = "=SUM(Transaction!D" & LastRow & ":D" & EndRow & ")"
-        SetUpNAVRecord (myCell.Row)
         
         Set myCell = myCell.Cells(2, 1)
         
@@ -112,8 +109,6 @@ Private Sub GenerateNAVReport()
                 endYear = Evaluate("=MAX(IF(Data!A:A<" & Int(CDbl(DateSerial(tYear, 12, 31))) & ",Data!A:A))")
                 If endYear <> myCell.Cells(0, 1).Value Then
                     myCell.Cells(1, 1).Value = endYear
-                    myCell.Cells(1, 5).Value = 0
-                    SetUpNAVRecord (myCell.Row)
                     
                     Set myCell = myCell.Cells(2, 1)
                 End If
@@ -127,31 +122,36 @@ Private Sub GenerateNAVReport()
     prevDate = Evaluate("=MAX(IF(Data!A:A<=" & Int(CDbl(Date)) & ",Data!A:A))")
     If prevDate <> myCell.Cells(0, 1).Value Then
         myCell.Cells(1, 1).Value = prevDate
-        myCell.Cells(1, 5).Value = 0
-        SetUpNAVRecord (myCell.Row)
     End If
     
+    myActive = NAV.ActCell
+    NAVPasteFormula
+    NAV.Range(myActive).Select
     Transaction.Activate
     Application.ScreenUpdating = True
 End Sub
 
 '---------------------------------------------------------------------------------------
-' Procedure : SetUpNAVRecord
+' Procedure : NAVPasteFormula
 ' Author : guhungry
-' Date : 2012-12-31
-' Purpose : Set Up NAV Calculation Record
+' Date : 2014-03-10
+' Purpose : Copy formula template to NAV
 '---------------------------------------------------------------------------------------
 '
-Private Sub SetUpNAVRecord(numRow As Integer)
-    Dim myCell As Range
-    Set myCell = NAV.Cells(numRow, 1)
-    myCell.Cells(1, 2).FormulaR1C1 = "=RC[5]+RC[6]"
-    myCell.Cells(1, 3).FormulaR1C1 = "=IFERROR(RC[-1]-R[-1]C[-1]-RC[2], 0)"
-    myCell.Cells(1, 4).FormulaR1C1 = "=IF(ROW()=3,10,RC[-2]/RC[2])"
-    myCell.Cells(1, 6).FormulaR1C1 = "=IF(ROW()=3,RC[-4]/RC[-2],R[-1]C+(RC[-1]/R[-1]C[-2]))"
-    myCell.Cells(1, 9).Value = Evaluate("=MAX(IF(Data!A:A<NAV!A" & myCell.Row & ",Data!A:A))")
-    myCell.Cells(1, 7).Value = "=IFERROR(VLOOKUP(A" & myCell.Row & ",Data!A:G,5,FALSE),VLOOKUP(I" & myCell.Row & ",Data!A:G,5,FALSE)+E" & myCell.Row & ")"
-    myCell.Cells(1, 8).Value = "=IFERROR(VLOOKUP(A" & myCell.Row & ",Data!A:G,7,FALSE),VLOOKUP(I" & myCell.Row & ",Data!A:G,7,FALSE))"
+Private Sub NAVPasteFormula()
+    Dim source As Range, target As Range
+    
+    NAV.Initialize
+    If NAV.LastRow > 2 Then
+        Application.ScreenUpdating = False
+        Set source = NAV.Range("B2:I2")
+        'Set target = NAV.Range("B3:I4")
+        Set target = NAV.Range("B3:I" & NAV.LastRow)
+        
+        source.Copy
+        target.PasteSpecial Paste:=xlPasteFormulasAndNumberFormats, Operation:=xlNone, SkipBlanks:=False, Transpose:=False
+        Application.CutCopyMode = False
+    End If
 End Sub
 
 '---------------------------------------------------------------------------------------
@@ -183,4 +183,3 @@ Private Sub SortTransaction()
     End If
     Application.ScreenUpdating = True
 End Sub
-
