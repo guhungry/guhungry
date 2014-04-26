@@ -127,7 +127,7 @@ Private Sub SetDataFromWeb(Name As String, URL As String, Table As String, targe
         .RowNumbers = False
         .FillAdjacentFormulas = False
         .PreserveFormatting = False
-        .RefreshOnFileOpen = True
+        .RefreshOnFileOpen = False
         .BackgroundQuery = True
         .RefreshStyle = xlOverwriteCells
         .SavePassword = False
