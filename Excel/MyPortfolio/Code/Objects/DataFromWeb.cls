@@ -23,7 +23,7 @@ Sub btnResetWebData()
     LastRow = Utils.GetLastRow(DataFromWeb.Cells) + 2
 
     'Clear Data
-    'Utils.DeleteNames DataFromWeb.Names
+    Application.ScreenUpdating = False
     Range("A1:L" & LastRow).Delete Shift:=xlUp
     LastRow = 1
     'Delete all connections
@@ -53,6 +53,9 @@ Sub btnResetWebData()
     SetDataFromWeb "MaiWarrant", GetNameRefersTo(Setting.Names("URL_MAIWARRANT")), GetNameRefersTo(Setting.Names("TAB_MAIWARRANT")), "A" & LastRow
     LastRow = Utils.GetLastRow(DataFromWeb.Cells) + 2
     
+    Transaction.btnTransactionSortByTicker
+    DataFromWeb.Activate
+    Application.ScreenUpdating = True
 End Sub
 
 '---------------------------------------------------------------------------------------
@@ -121,14 +124,14 @@ End Sub
 '---------------------------------------------------------------------------------------
 '
 Private Sub SetDataFromWeb(Name As String, URL As String, Table As String, target As String)
-    With ActiveSheet.QueryTables.Add(Connection:="URL;" & URL, Destination:=Range(target))
+    With DataFromWeb.QueryTables.Add(Connection:="URL;" & URL, Destination:=DataFromWeb.Range(target))
         .Name = Name
         .FieldNames = True
         .RowNumbers = False
         .FillAdjacentFormulas = False
         .PreserveFormatting = False
         .RefreshOnFileOpen = False
-        .BackgroundQuery = True
+        .BackgroundQuery = False
         .RefreshStyle = xlOverwriteCells
         .SavePassword = False
         .SaveData = True

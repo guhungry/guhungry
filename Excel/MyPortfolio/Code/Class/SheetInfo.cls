@@ -87,7 +87,7 @@ Public Sub Init(SheetName As Range, Optional Row As Long = 1, Optional Column As
     CurRow = 1
     
     'Get Active Cell
-    pSheet.Parent.Select
+    pSheet.Parent.Activate
     pActiveCell = ActiveCell.Address
 End Sub
 
