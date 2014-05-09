@@ -63,6 +63,7 @@ Private Sub GenerateNAVReport()
     
     'Initialize Variables
     Application.ScreenUpdating = False
+    NAV.EnableCalculation = False
     Initialize
     NAV.Initialize
     NAV.ClearData
@@ -128,6 +129,7 @@ Private Sub GenerateNAVReport()
     NAVPasteFormula
     NAV.Range(myActive).Select
     Transaction.Activate
+    NAV.EnableCalculation = True
     Application.ScreenUpdating = True
 End Sub
 
@@ -183,3 +185,4 @@ Private Sub SortTransaction()
     End If
     Application.ScreenUpdating = True
 End Sub
+
