@@ -51,6 +51,7 @@ Public Sub ReportMake()
     Dim LastRow As Long, EndRow As Long, StartRow As Long, NumStock As Long
     
     'Initialize Variables
+    Report.EnableCalculation = False
     NAV.Initialize
     Transaction.Initialize
     Report.Activate
@@ -87,26 +88,13 @@ Public Sub ReportMake()
         'Buy
         myCell.Cells(1, 11).Value = "=SUMIF(Transaction!D" & EndRow & ":D" & LastRow & "," & Chr$(34) & ">0" & Chr$(34) & ")"
         myCell.Cells(1, 13).Value = "=-SUMIF(Transaction!D" & EndRow & ":D" & LastRow & "," & Chr$(34) & ">0" & Chr$(34) & ",Transaction!C" & EndRow & ":C" & LastRow & ")"
-        If myCell.Cells(1, 11).Value = 0 Then
-            myCell.Cells(1, 11).Value = ""
-            myCell.Cells(1, 13).Value = ""
-        Else
-            myCell.Cells(1, 12).FormulaR1C1 = "=RC[1]/RC[-1]"
-        End If
+        myCell.Cells(1, 12).FormulaR1C1 = "=IFERROR(RC[1]/RC[-1]," & Chr$(34) & Chr$(34) & ")"
         'Sell
         myCell.Cells(1, 14).Value = "=SUMIF(Transaction!E" & EndRow & ":E" & LastRow & "," & Chr$(34) & ">0" & Chr$(34) & ")"
         myCell.Cells(1, 16).Value = "=SUMIF(Transaction!E" & EndRow & ":E" & LastRow & "," & Chr$(34) & ">0" & Chr$(34) & ",Transaction!C" & EndRow & ":C" & LastRow & ")"
-        If myCell.Cells(1, 14).Value = 0 Then
-            myCell.Cells(1, 14).Value = ""
-            myCell.Cells(1, 16).Value = ""
-        Else
-            myCell.Cells(1, 15).FormulaR1C1 = "=RC[1]/RC[-1]"
-        End If
+        myCell.Cells(1, 15).FormulaR1C1 = "=IFERROR(RC[1]/RC[-1]," & Chr$(34) & Chr$(34) & ")"
         'Dividend
         myCell.Cells(1, 18).Value = "=SUMIF(Transaction!F" & EndRow & ":F" & LastRow & "," & Chr$(34) & ">0" & Chr$(34) & ",Transaction!C" & EndRow & ":C" & LastRow & ")"
-        If myCell.Cells(1, 18).Value = 0 Then
-            myCell.Cells(1, 18).Value = ""
-        End If
         'Remain Stock
         myCell.Cells(1, 5).FormulaR1C1 = "=RC[6]-RC[9]+R[1]C"
         'Commission
@@ -120,31 +108,19 @@ Public Sub ReportMake()
             'Buy
             target.Cells(1, 11).Value = "=SUMIF(Transaction!D" & EndRow & ":D" & StartRow & "," & Chr$(34) & ">0" & Chr$(34) & ")"
             target.Cells(1, 13).Value = "=-SUMIF(Transaction!D" & EndRow & ":D" & StartRow & "," & Chr$(34) & ">0" & Chr$(34) & ",Transaction!C" & EndRow & ":C" & StartRow & ")"
-            If target.Cells(1, 11).Value = 0 Then
-                target.Cells(1, 11).Value = ""
-                target.Cells(1, 13).Value = ""
-            Else
-                target.Cells(1, 12).FormulaR1C1 = "=RC[1]/RC[-1]"
-            End If
+            target.Cells(1, 12).FormulaR1C1 = "=IFERROR(RC[1]/RC[-1]," & Chr$(34) & Chr$(34) & ")"
             'Sell
             target.Cells(1, 14).Value = "=SUMIF(Transaction!E" & EndRow & ":E" & StartRow & "," & Chr$(34) & ">0" & Chr$(34) & ")"
             target.Cells(1, 16).Value = "=SUMIF(Transaction!E" & EndRow & ":E" & StartRow & "," & Chr$(34) & ">0" & Chr$(34) & ",Transaction!C" & EndRow & ":C" & StartRow & ")"
-            If target.Cells(1, 14).Value = 0 Then
-                target.Cells(1, 14).Value = ""
-                target.Cells(1, 16).Value = ""
-            Else
-                target.Cells(1, 15).FormulaR1C1 = "=RC[1]/RC[-1]"
-            End If
+            target.Cells(1, 15).FormulaR1C1 = "=IFERROR(RC[1]/RC[-1], " & Chr$(34) & Chr$(34) & ")"
             'Dividend
             target.Cells(1, 18).Value = "=SUMIF(Transaction!F" & EndRow & ":F" & StartRow & "," & Chr$(34) & ">0" & Chr$(34) & ",Transaction!C" & EndRow & ":C" & StartRow & ")"
-            If target.Cells(1, 18).Value = 0 Then
-                target.Cells(1, 18).Value = ""
-            End If
             'Remain Stock
             target.Cells(1, 5).FormulaR1C1 = "=RC[6]-RC[9]"
             'Commission
             target.Cells(1, 17).Value = "=-SUM(Transaction!I" & EndRow & ":I" & StartRow & ")"
 
+            Report.EnableCalculation = True
             If target.Cells(1, 5).Value > 0 Then
                 target.Cells(1, 6).Value = "=-RC[-2]/RC[-1]"
                 'Get Latest Stock Price
@@ -155,6 +131,7 @@ Public Sub ReportMake()
                 target.Cells(1, 9).Value = "=RC[-1]+RC[-5]"
                 target.Cells(1, 10).Value = "=IF(RC[-6]>0,RC[-1]*0.01,-RC[-1]/RC[-6])"
             End If
+            Report.EnableCalculation = False
         End If
         
         Set myCell = myCell.Cells(2, 1)
@@ -182,6 +159,7 @@ Public Sub ReportMake()
     Initialize
     ReportStyleAdd
     Report.Range(myActive).Select
+    Report.EnableCalculation = True
 End Sub
 
 '---------------------------------------------------------------------------------------
