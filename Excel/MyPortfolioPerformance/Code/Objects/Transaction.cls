@@ -88,7 +88,7 @@ Private Sub GenerateNAVReport()
         
         'Before Transaction Date
         prevDate = Evaluate("=MAX(IF(Data!A:A<" & Int(CDbl(curDate)) & ",Data!A:A))")
-        If LastRow <> 2 And myCell.Cells(0, 1).Value <> prevDate Then
+        If LastRow <> 2 And myCell.Cells(0, 1).Value < prevDate Then
             myCell.Cells(1, 1).Value = prevDate
             
             Set myCell = myCell.Cells(2, 1)
