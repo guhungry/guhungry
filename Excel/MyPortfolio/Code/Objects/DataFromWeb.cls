@@ -86,7 +86,7 @@ Sub btnUpdateStockPrice()
 
     'Default Value
     Stock.Initialize
-    StockPrice.Range("A1").Value = DataFromWeb.Range("A2").Value
+    StockPrice.Range(GetNameRefersTo(Setting.Names("DATE_STOCKPRICE"))).Value = DataFromWeb.Range(GetNameRefersTo(Setting.Names("DATE_WEB"))).Value
     Set list = StockPrice.Range("A6:A" & Application.WorksheetFunction.Max(Utils.GetLastRow(StockPrice.Cells), 6))
     today = GetUpdateDate()
 
