@@ -14,6 +14,7 @@
 static BOOL isInit = NO;
 static NSCalendar *gregorian;
 static NSDateFormatter *formatWebService;
+const NSCalendarUnit dateOnlyUnit = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
 
 +(void)initGlobal
 {
@@ -64,7 +65,8 @@ static NSDateFormatter *formatWebService;
 
 #pragma mark Date Diff Functions
 /**
- * Date Diff From Current Timestamp (Current Timestamp < Date)
+ * Date Diff From Current Timestamp (Current Timestamp < Date)<br />
+ * Example : Count down to time out
  *
  * @param date NSDate instance
  * @param components Date Components to be Compared
@@ -75,13 +77,13 @@ static NSDateFormatter *formatWebService;
  */
 +(NSDateComponents *)dateDiffFromCurrentTimestamp:(NSDate *)date components:(NSCalendarUnit)components
 {
-	NSDateComponents *component = [gregorian components:components fromDate:[NSDate date] toDate:date options:0];
-
-	return component;
+	[DateUtils initGlobal];
+	return [gregorian components:components fromDate:[NSDate date] toDate:date options:0];
 }
 
 /**
- * Date Diff To Current Timestamp (Current Timestamp > Date)
+ * Date Diff To Current Timestamp (Current Timestamp > Date)<br />
+ * Example : Chat post
  *
  * @param date NSDate instance
  * @param components Date Components to be Compared
@@ -92,9 +94,43 @@ static NSDateFormatter *formatWebService;
  */
 +(NSDateComponents *)dateDiffToCurrentTimestamp:(NSDate *)date components:(NSCalendarUnit)components
 {
-	NSDateComponents *component = [gregorian components:components fromDate:date toDate:[NSDate date] options:0];
+	[DateUtils initGlobal];
+	return [gregorian components:components fromDate:date toDate:[NSDate date] options:0];
+}
 
-	return component;
+/**
+ * Date Diff From Current Date (Current Date < Date)
+ *
+ * @param date NSDate instance
+ * @param components Date Components to be Compared
+ * @return Date Diff in NSDateComponents instance
+ * @author Woraphot Chokratanasombat
+ * @since 2015-08-27
+ * @updated 2015-08-27
+ */
++(NSDateComponents *)dateDiffFromCurrentDate:(NSDate *)date components:(NSCalendarUnit)components
+{
+	[DateUtils initGlobal];
+	NSDateComponents *to = [gregorian components:dateOnlyUnit fromDate:[NSDate date]];
+	return [gregorian components:components fromDate:[gregorian dateFromComponents:to] toDate:date options:0];
+}
+
+/**
+ * Date Diff To Current Date (Current Date > Date)<br />
+ * Example : Calculate Age
+ *
+ * @param date NSDate instance
+ * @param components Date Components to be Compared
+ * @return Date Diff in NSDateComponents instance
+ * @author Woraphot Chokratanasombat
+ * @since 2015-08-27
+ * @updated 2015-08-27
+ */
++(NSDateComponents *)dateDiffToCurrentDate:(NSDate *)date components:(NSCalendarUnit)components
+{
+	[DateUtils initGlobal];
+	NSDateComponents *to = [gregorian components:dateOnlyUnit fromDate:[NSDate date]];
+	return [gregorian components:components fromDate:date toDate:[gregorian dateFromComponents:to] options:0];
 }
 
 @end

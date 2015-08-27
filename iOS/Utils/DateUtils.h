@@ -15,7 +15,11 @@
 +(NSString *)stringWebServiceFromDate:(NSDate *)date;
 
 #pragma mark Date Diff Functions
+// Timestamp
 +(NSDateComponents *)dateDiffFromCurrentTimestamp:(NSDate *)date components:(NSCalendarUnit)components;
 +(NSDateComponents *)dateDiffToCurrentTimestamp:(NSDate *)date components:(NSCalendarUnit)components;
+// Date
++(NSDateComponents *)dateDiffFromCurrentDate:(NSDate *)date components:(NSCalendarUnit)components;
++(NSDateComponents *)dateDiffToCurrentDate:(NSDate *)date components:(NSCalendarUnit)components;
 
 @end
