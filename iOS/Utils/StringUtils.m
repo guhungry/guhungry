@@ -78,6 +78,22 @@ static NSNumberFormatter *integerFormatter;
 }
 
 /**
+ * Format NSString instance in to #,##0.00 format
+ *
+ * @param number The number in NSString instance
+ * @return Formatted number string
+ * @author Woraphot Chokratanasombat
+ * @since 2015-09-04
+ * @updated 2015-09-04
+ */
++(NSString *)formatDecimalNumberFromString:(NSString *)number
+{
+	[StringUtils initGlobal];
+
+	return [StringUtils formatDecimalNumber:[decimalFormatter numberFromString:number]];
+}
+
+/**
  * Format NSNumber instance in to #,##0 format
  *
  * @param number The number in NSNumber instance
