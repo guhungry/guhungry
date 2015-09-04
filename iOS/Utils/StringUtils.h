@@ -12,6 +12,9 @@
 
 +(NSString *)getNotNullString:(id)object;
 +(NSString *)getNotNullString:(id)object withDefault:(NSString *)value;
-+(NSString *)formatNumber:(NSNumber*)number;
+#pragma mark Format Number Functions
++(NSString *)formatDecimalNumber:(NSNumber*)number;
++(NSString *)formatIntegerNumber:(NSNumber*)number;
++(NSString *)formatIntegerNumberFromString:(NSString *)number;
 
 @end

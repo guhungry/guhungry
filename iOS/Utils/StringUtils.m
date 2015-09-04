@@ -11,15 +11,22 @@
 @implementation StringUtils
 
 static BOOL isInit = NO;
-static NSNumberFormatter *numberFormatter;
+static NSNumberFormatter *decimalFormatter;
+static NSNumberFormatter *integerFormatter;
 
 +(void)initGlobal
 {
 	if (isInit) return;
 
-	// Initialize Number Formatter Instance
-	numberFormatter = [[NSNumberFormatter alloc] init];
-	[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+	// Initialize Decimal Number Formatter Instance
+	decimalFormatter = [[NSNumberFormatter alloc] init];
+	[decimalFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+	[decimalFormatter setMaximumFractionDigits:2];
+	[decimalFormatter setMinimumFractionDigits:2];
+
+	// Initialize Integer Number Formatter Instance
+	integerFormatter = [[NSNumberFormatter alloc] init];
+	[integerFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
 
 	isInit = YES;
 }
@@ -53,6 +60,23 @@ static NSNumberFormatter *numberFormatter;
 	else return object;
 }
 
+#pragma mark Format Number Functions
+/**
+ * Format NSNumber instance in to #,##0.00 format
+ *
+ * @param number The number in NSNumber instance
+ * @return Formatted number string
+ * @author Woraphot Chokratanasombat
+ * @since 2015-09-04
+ * @updated 2015-09-04
+ */
++(NSString *)formatDecimalNumber:(NSNumber*)number
+{
+	[StringUtils initGlobal];
+
+	return [decimalFormatter stringFromNumber:number];
+}
+
 /**
  * Format NSNumber instance in to #,##0 format
  *
@@ -62,11 +86,27 @@ static NSNumberFormatter *numberFormatter;
  * @since 2015-09-04
  * @updated 2015-09-04
  */
-+(NSString *)formatNumber:(NSNumber*)number
++(NSString *)formatIntegerNumber:(NSNumber*)number
 {
 	[StringUtils initGlobal];
 
-	return [numberFormatter stringFromNumber:number];
+	return [integerFormatter stringFromNumber:number];
+}
+
+/**
+ * Format NSString instance in to #,##0 format
+ *
+ * @param number The number in NSString instance
+ * @return Formatted number string
+ * @author Woraphot Chokratanasombat
+ * @since 2015-09-04
+ * @updated 2015-09-04
+ */
++(NSString *)formatIntegerNumberFromString:(NSString *)number
+{
+	[StringUtils initGlobal];
+
+	return [StringUtils formatIntegerNumber:[integerFormatter numberFromString:number]];
 }
 
 @end
