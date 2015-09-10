@@ -1,6 +1,6 @@
 //
 //  DateUtils.m
-//  GossipGirl
+//  iOS Utilities
 //
 //  Created by Woraphot Chokratanasombat on 05/08/2015.
 //  Copyright (c) 2015 Woraphot Chokratanasombat. All rights reserved.

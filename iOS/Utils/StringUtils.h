@@ -1,6 +1,6 @@
 //
 //  StringUtils.h
-//  GossipGirl
+//  iOS Utilities
 //
 //  Created by Woraphot Chokratanasombat on 31/08/2015.
 //  Copyright (c) 2015 Woraphot Chokratanasombat. All rights reserved.
