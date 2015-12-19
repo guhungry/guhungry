@@ -86,7 +86,11 @@ End Function
 ' @return           the matched date
 ' Example           ExtractDate("Last Update 30 Jun 2010 16:59:45") => '30 Jun 2010'
 '---------------------------------------------------------------------------------------
-'
+'2015-12-18 Remove using Regular Expression which not support by Mac
 Public Function ExtractDate(subject As String) As Date
-    ExtractDate = DateValue(TextUtils.GetRegExp("\d{1,2} [A-Za-z]+ \d{4}", subject))
+    subject = Replace(subject, "* Last Update ", "")
+    subject = Replace(subject, "* ข้อมูลล่าสุด ", "")
+    subject = Left(subject, Len(subject) - 9)
+
+    ExtractDate = DateValue(subject)
 End Function

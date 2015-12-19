@@ -85,7 +85,7 @@ Public Sub Init(SheetName As Range, Optional Row As Long = 1, Optional Column As
     LastCol = Utils.GetLastColumn(pSheet, Row)
     LastRow = Utils.GetLastRow(pSheet, Column)
     CurRow = 1
-    
+
     'Get Active Cell
     pSheet.Parent.Activate
     pActiveCell = ActiveCell.Address

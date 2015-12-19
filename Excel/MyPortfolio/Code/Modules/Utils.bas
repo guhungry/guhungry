@@ -47,7 +47,7 @@ Public Function GetNameRefersTo(Value As Name) As String
     Dim R As Range
     On Error Resume Next
     Set R = Value.RefersToRange
-    
+
     HasRef = (err.Number = 0)
     If HasRef = True Then
         S = R.Text

@@ -20,6 +20,7 @@ Attribute VB_Exposed = True
 Sub btnResetWebData()
     'Define Variables
     Dim LastRow As Integer
+
     LastRow = Utils.GetLastRow(DataFromWeb.Cells) + 2
 
     'Clear Data
@@ -52,7 +53,7 @@ Sub btnResetWebData()
     'MAI Warrant
     SetDataFromWeb "MaiWarrant", GetNameRefersTo(Setting.Names("URL_MAIWARRANT")), GetNameRefersTo(Setting.Names("TAB_MAIWARRANT")), "A" & LastRow
     LastRow = Utils.GetLastRow(DataFromWeb.Cells) + 2
-    
+
     Transaction.btnTransactionSortByTicker
     DataFromWeb.Activate
     Application.ScreenUpdating = True
@@ -68,7 +69,6 @@ End Sub
 Sub btnRefreshFromWeb()
     ActiveWorkbook.RefreshAll
 End Sub
-
 
 '---------------------------------------------------------------------------------------
 ' Procedure : btnUpdateStockPrice
@@ -100,7 +100,7 @@ Sub btnUpdateStockPrice()
             End If
         End If
     Next
-    
+
     'Insert Unknown StockPrice
     Set list = DataFromWeb.Range("A28:A" & Stock.LastDataFromWeb)
     If (Stock.LastStockPrice > 5) Then

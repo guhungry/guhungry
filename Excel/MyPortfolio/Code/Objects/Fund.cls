@@ -10,6 +10,22 @@ Attribute VB_Exposed = True
 Option Explicit
 
 '---------------------------------------------------------------------------------------
+' Procedure : Validate Transaction Type
+' Author    : guhungry
+' Date      : 2015-12-17
+' Param     : val - Uppercased, Trimmed Transaction Type String
+' Purpose   : Transaction Type has only D - Deposit, W - Withdrawn, I - Interest
+'---------------------------------------------------------------------------------------
+Function ValidateTransactionType(val As String) As Boolean
+
+    If val = "D" Or val = "W" Or val = "D" Then
+        ValidateTransactionType = True
+    Else
+        ValidateTransactionType = False
+    End If
+End Function
+
+'---------------------------------------------------------------------------------------
 ' Procedure : btnFundAdd
 ' Author    : guhungry
 ' Date      : 2010-07-01
@@ -23,7 +39,7 @@ Sub btnFundAdd()
     err = ""
     Set source = Fund.Range("B5")
     Set target = Fund.Range("B11")
-    
+
     'Validate Data
     If Trim(source.Cells(1, 1).Value) = "" Then
         err = err & "Please insert Bank." & vbNewLine
@@ -34,10 +50,10 @@ Sub btnFundAdd()
     If Not (IsDate(source.Cells(1, 2).Value)) Then
         err = err & "Date is not valid." & vbNewLine
     End If
-    If Not (TextUtils.TestRegExp("^[DWI]$", source.Cells(1, 3).Value)) Then
+    source.Cells(1, 3).Value = Trim(UCase(source.Cells(1, 3).Value))
+    If Not (ValidateTransactionType(source.Cells(1, 3).Value)) Then
         source.Cells(1, 3).Value = "D"
     End If
-    source.Cells(1, 3).Value = UCase(source.Cells(1, 3).Value)
     If Not (Utils.IsNumber(source.Cells(1, 4).Value)) Then
         err = err & "Please insert amount." & vbNewLine
     End If
@@ -45,7 +61,7 @@ Sub btnFundAdd()
         MsgBox err
         Exit Sub
     End If
-    
+
     'Add Data
     target.EntireRow.Insert xlDown, xlFormatFromRightOrBelow
     target.Cells(0, 1).Value = source.Cells(1, 1).Value
@@ -57,7 +73,7 @@ Sub btnFundAdd()
         target.Cells(0, 4).Value = source.Cells(1, 4).Value
     End If
     target.Cells(0, 6).Value = source.Cells(1, 5).Value
-    
+
     'Refresh Data
     FundRefreshData
 End Sub
@@ -83,13 +99,13 @@ End Sub
 Private Sub FundRefreshData()
     Dim source As Range, target  As Range
     Dim info As New SheetInfo
-    
+
     Set source = Fund.Range("B8:G8")
     info.Init Fund.Cells, 9, "B"
     Application.ScreenUpdating = False
     If info.LastRow > 10 Then
         Set target = Fund.Range("B11:G" & info.LastRow)
-        
+
         'Sort
         Fund.Sort.SortFields.Clear
         Fund.Sort.SortFields.Add Key:=Range("B11:B" & info.LastRow), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
@@ -108,7 +124,7 @@ Private Sub FundRefreshData()
         target.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, SkipBlanks:=False, Transpose:=False
         Application.CutCopyMode = False
         info.RestoreActiveCell
-        
+
         'Add Formular
         Dim i As Integer
         i = info.LastRow
@@ -120,4 +136,3 @@ Private Sub FundRefreshData()
     Fund.Cells(10, 6).Value = "=SUM(E11:E" & info.LastRow & ")"
     Application.ScreenUpdating = True
 End Sub
-
