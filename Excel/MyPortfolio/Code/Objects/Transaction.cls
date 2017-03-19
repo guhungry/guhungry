@@ -44,7 +44,7 @@ Sub btnTransactionAdd()
     err = ""
     Set source = Transaction.Range("B6")
     Set target = Transaction.Range("B11")
-    
+
     'Validate Data
     If IsEmpty(source.Cells(1, 1).Value) Then
         source.Cells(1, 1).Value = "=Today()"
@@ -78,7 +78,7 @@ Sub btnTransactionAdd()
         MsgBox err
         Exit Sub
     End If
-    
+
     'Add Data
     target.EntireRow.Insert xlDown, xlFormatFromRightOrBelow
     target.Cells(0, 1).Value = source.Cells(1, 1).Value
@@ -94,7 +94,7 @@ Sub btnTransactionAdd()
     target.Cells(0, 7).FormulaR1C1 = "=IF(RC[-4]>0, -1*RC[-4]*RC[-1], IF(RC[-3]>0, RC[-3]*RC[-1], RC[-2]*RC[-1]))"
     target.Cells(0, 8).FormulaR1C1 = "=IF(OR(RC[-5]>0, RC[-4]>0),-MAX(ABS(RC[-1])*" & source.Cells(1, 7).Value & "," & source.Cells(1, 8).Value & ")*(1+" & source.Cells(1, 6).Value & "),0)"
     target.Cells(0, 9).FormulaR1C1 = "=RC[-1]+RC[-2]"
-    
+
     'Styling
     Initialize
     TransactionStyleAdd
@@ -123,7 +123,7 @@ End Sub
 Sub btnTransactionSortByTicker()
     Dim myActive As String
     TransactionSort "C", xlAscending, "B", xlDescending
-    
+
     'Make Report & Portfolio
     Application.ScreenUpdating = False
     Report.Initialize
@@ -149,12 +149,12 @@ End Sub
 '
 Private Sub TransactionStyleAdd()
     Dim source As Range, target As Range
-    
+
     If info.LastRow > 10 Then
         Application.ScreenUpdating = False
         Set source = Transaction.Range("B9:K9")
         Set target = Transaction.Range("B11:K" & info.LastRow)
-        
+
         source.Copy
         target.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, SkipBlanks:=False, Transpose:=False
         Application.CutCopyMode = False
@@ -180,7 +180,7 @@ Private Sub TransactionSort(Column1 As String, Order1 As XlSortOrder, Column2 As
     Application.ScreenUpdating = False
     If info.LastRow > 10 Then
         Set target = Transaction.Range("B11:K" & info.LastRow)
-        
+
         'Sort
         Transaction.Sort.SortFields.Clear
         Transaction.Sort.SortFields.Add Key:=Range(Column1 & "11:" & Column1 & info.LastRow), SortOn:=xlSortOnValues, Order:=Order1, DataOption:=xlSortNormal
@@ -197,4 +197,3 @@ Private Sub TransactionSort(Column1 As String, Order1 As XlSortOrder, Column2 As
     End If
     Application.ScreenUpdating = True
 End Sub
-
