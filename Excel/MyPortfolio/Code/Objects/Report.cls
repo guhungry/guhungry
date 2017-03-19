@@ -50,7 +50,7 @@ Public Sub ReportMake()
     Dim myComment As String
     Dim myCell As Range, endCell As Range, tran As Range, target As Range
     Dim LastRow As Long, EndRow As Long, StartRow As Long, NumStock As Long
-
+    
     'Initialize Variables
     Report.EnableCalculation = False
     Stock.Initialize
@@ -62,7 +62,7 @@ Public Sub ReportMake()
         Set tran = Transaction.Range("C" & LastRow)
         curStock = tran.Cells(1, 1).Value
         curDate = tran.Cells(1, 0).Value
-
+        
         'Set Header in New Row
         If curStock <> tran.Cells(0, 1).Value Then
             StartRow = LastRow
@@ -72,7 +72,7 @@ Public Sub ReportMake()
             'Report.Hyperlinks.Add Anchor:=myCell.cells(1, 3), Address:="", SubAddress:=Utils.RangeAddress(tran.cells(1, 1))
             Set myCell = myCell.Cells(2, 1)
         End If
-
+        
         'Find EndRow
         NumStock = NumStock + 1
         EndRow = LastRow + 1
@@ -103,7 +103,7 @@ Public Sub ReportMake()
         myCell.Cells(1, 5).FormulaR1C1 = "=RC[6]-RC[9]+R[1]C"
         'Commission
         myCell.Cells(1, 17).Value = "=-SUM(Transaction!I" & EndRow & ":I" & LastRow & ")"
-
+        
         'Insert Header in Last Row
         If curStock <> endCell.Cells(1, 1).Value Or EndRow = Transaction.LastRow Then
             Set myCell = myCell.Cells(2, 1)
@@ -130,16 +130,14 @@ Public Sub ReportMake()
                 'Get Latest Stock Price
                 target.Cells(1, 7).Value = Stock.GetLatestStockPrice(curStock, myComment)
                 target.Cells(1, 7).AddComment myComment
-
-                AutoSizeComment (target.Cells(1, 7))
-
+                target.Cells(1, 7).Comment.Shape.TextFrame.AutoSize = True
                 target.Cells(1, 8).Value = "=RC[-1]*RC[-3]"
                 target.Cells(1, 9).Value = "=RC[-1]+RC[-5]"
                 target.Cells(1, 10).Value = "=IF(RC[-6]>0,RC[-1]*0.01,-RC[-1]/RC[-6])"
             End If
             Report.EnableCalculation = False
         End If
-
+        
         Set myCell = myCell.Cells(2, 1)
         LastRow = EndRow + 1
     Loop
@@ -158,7 +156,7 @@ Public Sub ReportMake()
         myCell.Cells(1, 6).Value = "=SUM(I6:I" & LastRow & ")"
         myCell.Cells(1, 7).Value = "=IF(RC[-6]>0,RC[-1]*0.01,-RC[-1]/RC[-6])"
     End If
-
+    
     'Styling
     Dim myActive As String
     myActive = info.ActCell
@@ -166,20 +164,6 @@ Public Sub ReportMake()
     ReportStyleAdd
     Report.Range(myActive).Select
     Report.EnableCalculation = True
-End Sub
-
-Sub AutoSizeComment(myCell As Range)
-    myCell.Comment.Visible = True
-    myCell.Comment.Shape.Select True
-    With Selection
-        .HorizontalAlignment = xlLeft
-        .VerticalAlignment = xlTop
-        .Orientation = xlHorizontal
-        '.WrapAutoText = False
-        .AutoSize = True
-    End With
-    myCell.Comment.Visible = False
-
 End Sub
 
 '---------------------------------------------------------------------------------------
@@ -217,11 +201,11 @@ End Sub
 '
 Private Sub ReportStyleAdd()
     Dim source As Range, target As Range
-
+    
     If LastRow > 5 Then
         Set source = Report.Range("A2:R2")
         Set target = Report.Range("A6:R" & LastRow)
-
+        
         source.Copy
         target.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, SkipBlanks:=False, Transpose:=False
         Application.CutCopyMode = False

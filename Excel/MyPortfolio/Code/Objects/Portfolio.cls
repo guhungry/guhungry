@@ -58,18 +58,18 @@ Sub PortfolioMake()
     Stock.Initialize
     Report.Initialize
     uiLang = GetNameRefersTo(Setting.Names("uiLang"))
-
+        
     'Parse Stock Data
     ParseTransaction curList(), oldList()
     HasNewStock = (UBound(curList) > 0)
-
+    
     'Print Current Stocks
     PrintStock 27, curList(), True
-
+    
     'Print Old Stocks
     rowOldHeader = 27 + UBound(curList)
     PrintStock rowOldHeader + 1, oldList(), False
-
+    
     'Copy Price
     Initialize
     If LastRow > 26 Then
@@ -79,7 +79,7 @@ Sub PortfolioMake()
         target.PasteSpecial Paste:=xlPasteFormulas, Operation:=xlNone, SkipBlanks:=False, Transpose:=False
         Application.CutCopyMode = False
     End If
-
+    
     'Add Header
     numNewStock = Application.WorksheetFunction.Max(UBound(curList), 1)
     numOldStock = Application.WorksheetFunction.Max(UBound(oldList), 1)
@@ -110,7 +110,7 @@ Sub PortfolioMake()
     Portfolio.Cells(24, 5).FormulaR1C1 = "=RC[-1]-RC[-2]"
     Portfolio.Cells(24, 6).FormulaR1C1 = "=IF(RC[-3]<=0,RC[-1]*0.01,RC[-1]/RC[-3])"
     Portfolio.Cells(24, 15).Value = Stock.GetLastUpdate()
-
+    
     'Charts
     Portfolio.ChartObjects("CurrentCost").Activate
     ActiveChart.SetSourceData source:=Portfolio.Range("B25:C25" & Utils.IFF(HasNewStock, ",B27:C" & (26 + numNewStock), "")), PlotBy:=xlColumns
@@ -118,7 +118,7 @@ Sub PortfolioMake()
     ActiveChart.SetSourceData source:=Portfolio.Range("B25:D25" & Utils.IFF(HasNewStock, ",B27:D" & (26 + numNewStock), "")), PlotBy:=xlColumns
     ActiveChart.SeriesCollection(2).Delete
     ActiveChart.SeriesCollection(1).Values = "=Portfolio!$D$25" & Utils.IFF(HasNewStock, ",Portfolio!$D$27:$D$" & (26 + numNewStock), "")
-
+    
     'Add Style
     Initialize
     PortfolioStyleAdd
@@ -135,7 +135,7 @@ Public Sub PrintStock(FirstRow As Long, ListStock() As Long, IsNewStock As Boole
     Dim i As Long
     Dim myCell As Range, myStock As Range
     Dim myComment As String
-
+    
     Set myCell = Portfolio.Range("B" & FirstRow)
     For i = 1 To UBound(ListStock)
         Set myStock = Report.Range("C" & ListStock(i))
@@ -153,16 +153,16 @@ Public Sub PrintStock(FirstRow As Long, ListStock() As Long, IsNewStock As Boole
         Else
             'Cost Data
             myCell.Cells(1, 2).Value = -myStock.Cells(1, 2).Value
-
+            
             'Latest Stock Price
             myCell.Cells(1, 8).Value = Stock.GetLatestStockPrice(myStock.Value, myComment)
             myCell.Cells(1, 8).AddComment myComment
         End If
-
+        
         'Stock Name
         myCell.Value = myStock.Value
         myCell.Cells(1, 8).Comment.Shape.TextFrame.AutoSize = True
-
+            
         Set myCell = myCell.Cells(2, 1)
     Next i
 
@@ -181,7 +181,7 @@ Public Sub PortfolioClearData()
     ActiveChart.SetSourceData source:=Portfolio.Range("B23:C23")
     Portfolio.ChartObjects("CurrentValue").Activate
     ActiveChart.SetSourceData source:=Portfolio.Range("B23:C23")
-
+    
     'Clear Data
     If LastRow > 23 Then
         Portfolio.Range("B24:O" & LastRow).Delete Shift:=xlUp
@@ -208,11 +208,11 @@ End Sub
 '
 Private Sub PortfolioStyleAdd()
     Dim source As Range, target As Range
-
+    
     If LastRow > 23 Then
         Set source = Portfolio.Range("B22:O22")
         Set target = Portfolio.Range("B24:O" & LastRow)
-
+        
         source.Copy
         target.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, SkipBlanks:=False, Transpose:=False
         Application.CutCopyMode = False
@@ -231,7 +231,7 @@ Private Sub ParseTransaction(ByRef listNew() As Long, ByRef listOld() As Long)
     Dim Row As Long
     iNew = 1
     iOld = 1
-
+    
     For Row = 6 To Report.LastRow
         If Not (IsEmpty(Report.Cells(Row, 3))) Then
             If Report.Cells(Row, 5).Value > 0 Then

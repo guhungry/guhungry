@@ -20,7 +20,6 @@ Attribute VB_Exposed = True
 Sub btnResetWebData()
     'Define Variables
     Dim LastRow As Integer
-
     LastRow = Utils.GetLastRow(DataFromWeb.Cells) + 2
 
     'Clear Data
@@ -70,6 +69,7 @@ Sub btnRefreshFromWeb()
     ActiveWorkbook.RefreshAll
 End Sub
 
+
 '---------------------------------------------------------------------------------------
 ' Procedure : btnUpdateStockPrice
 ' Author    : guhungry
@@ -100,7 +100,7 @@ Sub btnUpdateStockPrice()
             End If
         End If
     Next
-
+    
     'Insert Unknown StockPrice
     Set list = DataFromWeb.Range("A28:A" & Stock.LastDataFromWeb)
     If (Stock.LastStockPrice > 5) Then

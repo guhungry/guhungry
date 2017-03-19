@@ -30,8 +30,7 @@ Private Function FindStock(StockName As String) As Range
     Dim Found As Range
     Set Found = DataFromWeb.Range("A27", "A" & LastDataFromWeb)
     Set Found = Found.Find(What:=StockName & " ", After:=Found.Cells(1, 1), LookIn:=xlFormulas, LookAt _
-        :=xlWhole, SearchOrder:=xlByRows, SearchDirection:=xlNext, MatchCase:=False)
-
+        :=xlWhole, SearchOrder:=xlByRows, SearchDirection:=xlNext, MatchCase:=False, SearchFormat:=False)
     Set FindStock = Found
 End Function
 
@@ -48,7 +47,7 @@ End Function
 Public Function GetStockValue(StockName As String) As Double
     Dim Found As Range
     Set Found = FindStock(StockName)
-
+    
     If Found Is Nothing Then
         GetStockValue = -1
     Else
@@ -73,7 +72,7 @@ End Function
 Public Function GetStockCell(StockName As String) As String
     Dim Found As Range
     Set Found = FindStock(StockName)
-
+    
     If Found Is Nothing Then
         GetStockCell = ""
     Else
@@ -132,11 +131,11 @@ End Function
 '
 Public Function IsStockPriceExist(StockName As String) As Boolean
     Dim Found As Range
-
+    
     Set Found = StockPrice.Range("A5:A" & LastStockPrice)
     Set Found = Found.Find(What:=Trim(StockName), After:=Found.Cells(1, 1), LookIn:=xlFormulas, LookAt _
         :=xlWhole, SearchOrder:=xlByRows, SearchDirection:=xlNext, MatchCase:=False, SearchFormat:=False)
-
+    
     If Found Is Nothing Then
         IsStockPriceExist = False
     Else
@@ -156,11 +155,11 @@ End Function
 '
 Public Function GetStockPriceCell(StockName As String) As String
     Dim Found As Range
-
+    
     Set Found = StockPrice.Range("A5:A" & LastStockPrice)
     Set Found = Found.Find(What:=Trim(StockName), After:=Found.Cells(1, 1), LookIn:=xlFormulas, LookAt _
-        :=xlWhole, SearchOrder:=xlByRows, SearchDirection:=xlNext, MatchCase:=False)
-
+        :=xlWhole, SearchOrder:=xlByRows, SearchDirection:=xlNext, MatchCase:=False, SearchFormat:=False)
+    
     If Found Is Nothing Then
         GetStockPriceCell = ""
     Else
@@ -208,18 +207,19 @@ End Sub
 'Return Reference to StockPrice or DataFromWeb
 Public Function GetLatestStockPrice(StockName As String, ByRef Comment As String) As String
     Dim price As String
-
+    
     'Compare StockPrice & DataFromWeb Date
     If IsDataFromWebNewer Then
         Comment = "Web : " & DataFromWeb.Range(GetNameRefersTo(Setting.Names("DATE_WEB"))).Value
         price = GetStockCell(StockName)
     End If
-
+    
     'If price is null get from stockprice
     If price = "" Then
         Comment = "StockPrice : " & StockPrice.Range(GetNameRefersTo(Setting.Names("DATE_STOCKPRICE"))).Value
         price = GetStockPriceCell(StockName)
     End If
-
+    
     GetLatestStockPrice = price
 End Function
+
